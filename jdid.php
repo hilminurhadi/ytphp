@@ -21,7 +21,7 @@ function jdid($no, $jum, $wait){
     }
 }
 print "\n\nSMS BOMBER JD.ID\n";
-print "Limit 50/jam maybe\n";
+print "Limit 50/15-30min\n";
 print "Koe Nurf\n\n\n";
 echo "Nomor (eg : 628xxx)\nInput : ";
 $nomor = trim(fgets(STDIN));
