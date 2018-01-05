@@ -17,9 +17,9 @@ function telkbomb($no, $jum, $wait){
         flush();
     }
 }
-print "\n\n<font color="red">SMS BOMBER My Telkomsel</font>\n";
-print "<font color="blue">Unlimited</font>\n";
-print "<font color="green">.Koe Nurf.</font>\n\n\n";
+print "\n\n<font color='red'>SMS BOMBER My Telkomsel</font>\n";
+print "<font color='blue'>Unlimited</font>\n";
+print "<font color='green'>.Koe Nurf.</font>\n\n\n";
 
 echo "Nomor (eg : 628xxx)\nInput : ";
 $nomor = trim(fgets(STDIN));
