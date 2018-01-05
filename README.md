@@ -1,6 +1,5 @@
 # koenurf
 Tutorial
-
 1. Download termux
 2. Buka dan ikutin langkah ini :
 pkg install php
