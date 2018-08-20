@@ -1,34 +1,101 @@
 <?php
-echo "List Tools :\n[1]SMS BOMBER MyTsel (Unlimited)\n[2]SMS BOMBER TokenTsel (Limit)\n[3]SMS BOMBER JD.ID (Limit)\n[4]SMS BOMBER PHD (Limit)\n[5]SMS BOMBER TokoPedia (Limit)\n[6]SPAM CALL TokoPedia (Limit)\nMasukan Pilihan (1-6) : ";
-$pilih = trim(fgets(STDIN));
-if($pilih>6 OR $pilih<1){
-    echo "Pilihan Tidak ada, silahkan pilih yang ada!\nMasukan Pilihanmu : ";
-    $pilih = trim(fgets(STDIN));
-    if($pilih>6 OR $pilih<1) $type = "fuck";
+//yudha tira pamungkas
+//paste token mu di $token
+
+echo "Masukkan Token : ";
+$token 	= trim(fgets(STDIN));
+
+function post($url, $params) {
+
+	$ch = curl_init(); 
+	curl_setopt ($ch, CURLOPT_URL, $url); 
+	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1); 
+
+	if(!empty($params)) {
+		curl_setopt ($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt ($ch, CURLOPT_POST, 1); 
+	}
+
+	curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt ($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+	curl_setopt ($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
+	curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+	$result = curl_exec($ch);
+	curl_close($ch);
+	return $result;
+
 }
-if($pilih==1){
-    $type = "mytsel";
-    $n = "SMS BOMBER MyTsel (Unlimited)";
-}elseif($pilih==2){
-    $type = "tokentsel";
-    $n = "SMS BOMBER TokenTsel (Limit)";
-}elseif($pilih==3){
-    $type = "jdid";
-    $n = "SMS BOMBER JD.ID (Limit)";
-}elseif($pilih==4){
-    $type = "phd";
-    $n = "SMS BOMBER PHD (Limit)";
-}elseif($pilih==5){
-    $type = "toksms";
-    $n = "SMS BOMBER TokoPedia (Limit)";
-}elseif($pilih==6){
-    $type = "tokcall";
-    $n = "SPAM CALL TokoPedia (Limit)";
+
+function fetch_value($str,$find_start,$find_end) {
+	$start = @strpos($str,$find_start);
+	if ($start === false) {
+		return "";
+	}
+	$length = strlen($find_start);
+	$end    = strpos(substr($str,$start +$length),$find_end);
+	return trim(substr($str,$start +$length,$end));
 }
-if($type=="fuck"){
-    echo "Pilih salah satu goblog.\n";
-}else{
-    echo "Ok sayang kamu telah memilih $n.\n Silahkan tekan enter untuk melanjutkan..";
-    $lanjut = trim(fgets(STDIN));
-    require_once($type.".php");
+
+function inStr($s, $as){
+	$s = strtoupper($s);
+	if(!is_array($as)) $as=array($as);
+	for($i=0;$i<count($as);$i++) if(strpos(($s),strtoupper($as[$i]))!==false) return true;
+		return false;
 }
+
+
+
+    
+	$pisah = explode('.', $token);
+	$user_id = $pisah[0];
+	
+
+	
+
+	function start($user_id, $token) {
+		$page = array();
+		$page['order'] = post('http://instagetlikes.ru/api/getExtraOrders','user_id='.$user_id.'');
+		$page['task'] = post('http://instagetlikes.ru/api/getPhotoTask','user_id='.$user_id.'');
+
+
+		$_id = array();
+		$_id['order'] = fetch_value($page['order'], '"_id":"','"');
+		$_id['task'] = fetch_value($page['task'], '"_id":"','"');
+		$_id['photo'] = fetch_value($page['task'], '"photo_id":"','"');
+
+		if ($page) {
+			$post['order'] = post('http://instagetlikes.ru/api/performExtraOrder', 'token='.$token.'&_id='.$_id['order'].'');
+			$post['task'] = post('http://instagetlikes.ru/api/addFollowers', 'photo_id='.$_id['photo'].'&token='.$token.'');
+			$coin['order'] = fetch_value($post['order'], '"count_coins":',',');
+			$coin['task'] = fetch_value($post['task'], '"count_coins":','}');
+
+			if (inStr($post['order'], '"status":"ERROR",')) {
+
+				if (inStr($post['task'], 'already follows')) {
+					sleep(0);
+				} elseif (inStr($post['task'], 'OK')) {
+					echo "Success: ".$coin['task']."<br>";
+					flush();
+					ob_flush();
+					sleep(0);
+				}
+
+			} elseif (inStr($post['order'], '"status":"OK"')) {
+				echo "Success: ".$coin['order']." <br>";
+				flush();
+				ob_flush();
+				sleep(0);
+			}
+
+		}
+
+
+	}
+	
+	while (true) { 
+        start($user_id, $token);
+	}
+	
+
+?>
