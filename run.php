@@ -75,14 +75,14 @@ function inStr($s, $as){
 				if (inStr($post['task'], 'already follows')) {
 					sleep(0);
 				} elseif (inStr($post['task'], 'OK')) {
-					echo "Success: ".$coin['task']."<br>";
+					echo "Success: ".$coin['task']."\n";
 					flush();
 					ob_flush();
 					sleep(0);
 				}
 
 			} elseif (inStr($post['order'], '"status":"OK"')) {
-				echo "Success: ".$coin['order']." <br>";
+				echo "Success: ".$coin['order']." \n";
 				flush();
 				ob_flush();
 				sleep(0);
