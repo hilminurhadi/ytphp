@@ -179,7 +179,6 @@ console.log(chalk`
 //ikiganteng
 inquirer.prompt(User)
 .then(answers => {
-  var text = answers.text.split('|');
   Excute({
     username:answers.username,
     password:answers.password
