@@ -37,15 +37,6 @@ const User = [
 },
 {
   type:'input',
-  name:'text',
-  message:'[>] Insert Text Comment (Use [|] if more than 1):',
-  validate: function(value){
-    if(!value) return 'Can\'t Empty';
-    return true;
-  }
-},
-{
-  type:'input',
   name:'mysyntx',
   message:'[>] Input Total of Target You Want (ITTYW):',
   validate: function(value){
@@ -154,10 +145,12 @@ const Excute = async function(User, TargetUsername, Text, sleep, mysyntx){
 		for (let i = 0; i < getMedia.length; i++) {
 			console.log('[?] Try to Like Photo/Delay \n')
 			await Promise.all(getMedia[i].map(async(media) => {
+				var Text = fs.readFileSync('komen.txt', 'utf8').split('|');
 				var ranText = Text[Math.floor(Math.random() * Text.length)];
-                const ngeDo = await ngeComment(doLogin.session, media.id, ranText)
+				var iki = ranText+' @'+TargetUsername;
+                const ngeDo = await ngeComment(doLogin.session, media.id, iki)
 				const PrintOut = chalk`${ngeDo ? chalk`{bold.green Sukses Komen}` : chalk`{bold.red Gagal Komen}`}`
-				console.log(chalk`> ${media.link} => ${PrintOut} [${ranText}]`);
+				console.log(chalk`> ${media.link} => ${PrintOut} [${iki}]`);
 			}))
 			console.log(chalk`{yellow \n [#][>] Delay For ${sleep} MiliSeconds [<][#] \n}`)
 			    await delay(sleep)
