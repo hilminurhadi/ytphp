@@ -156,7 +156,7 @@ const Excute = async function(User, TargetUsername, Text, sleep, mysyntx){
 			await Promise.all(getMedia[i].map(async(media) => {
 				var ranText = Text[Math.floor(Math.random() * Text.length)];
 				var iki = ranText+' @'+TargetUsername;
-                const ngeDo = await ngeComment(doLogin.session, media.id, ranText)
+                const ngeDo = await ngeComment(doLogin.session, media.id, iki)
 				const PrintOut = chalk`${ngeDo ? chalk`{bold.green Sukses Komen}` : chalk`{bold.red Gagal Komen}`}`
 				console.log(chalk`> ${media.link} => ${PrintOut} [${ranText}]`);
 			}))
