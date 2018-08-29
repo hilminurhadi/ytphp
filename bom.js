@@ -37,6 +37,15 @@ const User = [
 },
 {
   type:'input',
+  name:'target1',
+  message:'[>] Insert Username List Target (Without @[at]):',
+  validate: function(value){
+    if(!value) return 'Can\'t Empty';
+    return true;
+  }
+},
+{
+  type:'input',
   name:'text',
   message:'[>] Insert Text Comment (Use [|] if more than 1):',
   validate: function(value){
@@ -134,6 +143,25 @@ async function ngeComment(session, id, text){
   }
 }
 
+const Followers = async function(session, id){
+  const feed = new Client.Feed.AccountFollowers(session, id);
+  try{
+    const Pollowers = [];
+    var cursor;
+    do {
+      if (cursor) feed.setCursor(cursor);
+      const getPollowers = await feed.get();
+      await Promise.all(getPollowers.map(async(akun) => {
+        Pollowers.push(akun.id);
+      }))
+      cursor = await feed.getCursor();
+    } while(feed.isMoreAvailable());
+    return Promise.resolve(Pollowers);
+  } catch(err){
+    return Promise.reject(err);
+  }
+}
+
 const Excute = async function(User, TargetUsername, Text, sleep, mysyntx){
 	try {
 		
@@ -147,6 +175,8 @@ const Excute = async function(User, TargetUsername, Text, sleep, mysyntx){
 		console.log('[?] Try to get Media . . .')		
 		const getTarget = await Target(TargetUsername);
 		var getMedia = await Media(doLogin.session, getTarget.id);
+		console.log(chalk`{green  [!] ${TargetUsername}: [${getTarget.id}] | Followers: [${getTarget.followers}]}`)
+    		const getFollowers = await Followers(doLogin.session, doLogin.account.id)
 		console.log(chalk`{bold.green [!] Succsess to get Media From [${TargetUsername}] }\n`);
 		getMedia = _.chunk(getMedia, mysyntx);
 
@@ -155,7 +185,7 @@ const Excute = async function(User, TargetUsername, Text, sleep, mysyntx){
 			console.log('[?] Try to Like Photo/Delay \n')
 			await Promise.all(getMedia[i].map(async(media) => {
 				var ranText = Text[Math.floor(Math.random() * Text.length)];
-				var iki = ranText+' @'+TargetUsername;
+				var iki = ranText+' @'+getFollowers;
                 const ngeDo = await ngeComment(doLogin.session, media.id, iki)
 				const PrintOut = chalk`${ngeDo ? chalk`{bold.green Sukses Komen}` : chalk`{bold.red Gagal Komen}`}`
 				console.log(chalk`> ${media.link} => ${PrintOut} [${ranText}]`);
@@ -189,5 +219,5 @@ inquirer.prompt(User)
   Excute({
     username:answers.username,
     password:answers.password
-  },answers.target,text,answers.sleep,answers.mysyntx);
+  },answers.target,answers.target1,text,answers.sleep,answers.mysyntx);
 })
