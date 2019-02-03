@@ -1,6 +1,7 @@
 <?php
 # koenurf
 # fb.com/mi.nurf
+echo "# koenurf #\n";
 
 $date = date("Y-m-d");
 
